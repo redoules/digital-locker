@@ -15,51 +15,54 @@ Plan d'implémentation pour l'application de suivi de vêtements au travail avec
     - Installer django-allauth, Pillow, django-htmx
     - Configurer requirements.txt
     - _Requirements: 1.1, 1.2_
-  - [ ] 1.3 Configurer Tailwind CSS et Flowbite
+  - [x] 1.3 Configurer Tailwind CSS et Flowbite
     - Installer django-tailwind ou configurer Tailwind standalone
     - Ajouter Flowbite via CDN ou npm
     - _Requirements: 7.1, 7.2, 7.3_
 
-- [ ] 2. Modèles de données
-  - [ ] 2.1 Créer le modèle ClothingItem
+- [x] 2. Modèles de données
+  - [x] 2.1 Créer le modèle ClothingItem
     - Implémenter les champs: name, type, color, photo, deposit_date, location, status, notes
     - Ajouter la relation ForeignKey vers User
     - Configurer les choix pour Type et Status
     - _Requirements: 2.1, 3.1, 4.1, 4.2_
-  - [ ] 2.2 Écrire les tests property-based pour le modèle ClothingItem
+  - [x] 2.2 Écrire les tests property-based pour le modèle ClothingItem
     - **Property 11: Persistance des modifications (round-trip)**
     - **Validates: Requirements 4.3, 6.1, 6.2, 6.3**
-  - [ ] 2.3 Créer le modèle UserProfile (optionnel)
+  - [x] 2.3 Créer le modèle UserProfile (optionnel)
     - Implémenter les champs: user, avatar, provider
     - _Requirements: 1.7_
-  - [ ] 2.4 Créer et appliquer les migrations
+  - [x] 2.4 Créer et appliquer les migrations
     - Générer les migrations avec makemigrations
     - Appliquer avec migrate
     - _Requirements: 6.1_
 
-- [ ] 3. Authentification avec django-allauth
-  - [ ] 3.1 Configurer django-allauth dans settings.py
+- [x] 3. Authentification avec django-allauth
+  - [x] 3.1 Configurer django-allauth dans settings.py
     - Ajouter les backends d'authentification
     - Configurer SOCIALACCOUNT_PROVIDERS pour Google, GitHub, Strava
     - Définir les paramètres ACCOUNT_*
     - _Requirements: 1.1, 1.2, 1.7_
-  - [ ] 3.2 Configurer les URLs d'authentification
+  - [x] 3.2 Configurer les URLs d'authentification
     - Inclure allauth.urls dans urls.py
     - _Requirements: 1.4, 1.5_
-  - [ ] 3.3 Écrire les tests pour l'authentification
+  - [x] 3.3 Écrire les tests pour l'authentification
     - **Property 1: Authentification requise pour l'accès**
     - **Property 2: OAuth et authentification locale**
     - **Validates: Requirements 1.1, 1.2, 1.4, 1.7**
-  - [ ] 3.4 Créer les templates d'authentification personnalisés
+  - [x] 3.4 Créer les templates d'authentification personnalisés
     - Créer account/login.html avec boutons OAuth et formulaire local
     - Créer account/signup.html
     - Créer account/logout.html
     - Appliquer le style Flowbite/Tailwind
     - _Requirements: 1.1, 1.2, 7.1, 7.2, 7.3_
 
-- [ ] 4. Checkpoint - Vérifier l'authentification
+- [x] 4. Checkpoint - Vérifier l'authentification
   - Ensure all tests pass, ask the user if questions arise.
   - Vérifier que la connexion locale et OAuth fonctionnent
+  - ✅ **14/14 tests passent**
+  - ✅ **Templates créés et configurés**
+  - ✅ **Documentation disponible dans CHECKPOINT_TASK_4.md**
 
 - [ ] 5. Vues et templates de l'application
   - [ ] 5.1 Créer le template de base (base.html)

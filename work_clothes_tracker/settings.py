@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +30,26 @@ SECRET_KEY = 'django-insecure-5&oxskrjb0#9f$$#jt7m8^e7dojhygn&5y*%m3kcn1$)uhr1)n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Détection automatique de l'URL Codespace
+CODESPACE_NAME = os.getenv('CODESPACE_NAME')
+if CODESPACE_NAME:
+    # GitHub Codespace environment
+    CODESPACE_URL = f"https://{CODESPACE_NAME}-8000.app.github.dev"
+    ALLOWED_HOSTS = [CODESPACE_URL.replace('https://', ''), 'localhost', '127.0.0.1']
+    CSRF_TRUSTED_ORIGINS = [
+        CODESPACE_URL,
+        'https://localhost:8000',  # Codespace proxy
+        'http://localhost:8000',
+    ]
+else:
+    # Local development
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    CSRF_TRUSTED_ORIGINS = [
+        'http://localhost:8000',
+        'https://localhost:8000',
+        'http://127.0.0.1:8000',
+        'https://127.0.0.1:8000',
+    ]
 
 
 # Application definition
@@ -37,8 +61,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Required for allauth
+    # Third party apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.strava',
+    'django_htmx',
+    'tailwind',
+    'theme',
+    'django_browser_reload',
+    # Project apps
     'clothing',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +87,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # Required for allauth
+    'django_htmx.middleware.HtmxMiddleware',  # HTMX support
 ]
 
 ROOT_URLCONF = 'work_clothes_tracker.urls'
@@ -124,3 +166,79 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Media files
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Tailwind CSS
+TAILWIND_APP_NAME = 'theme'
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django-allauth configuration
+# https://docs.allauth.org/en/latest/
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of allauth
+    'django.contrib.auth.backends.ModelBackend',
+    # allauth specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Account configuration (nouvelle API allauth 65+)
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # 'mandatory' en production
+ACCOUNT_UNIQUE_EMAIL = True
+
+# Social account configuration
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_QUERY_EMAIL = True
+
+# Login/logout URLs
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGIN_URL = '/accounts/login/'
+
+# Social account providers
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID', ''),
+            'secret': os.getenv('GOOGLE_CLIENT_SECRET', ''),
+            'key': ''
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    },
+    'github': {
+        'APP': {
+            'client_id': os.getenv('GITHUB_CLIENT_ID', ''),
+            'secret': os.getenv('GITHUB_CLIENT_SECRET', ''),
+            'key': ''
+        },
+        'SCOPE': [
+            'user',
+            'user:email',
+        ],
+    },
+    'strava': {
+        'APP': {
+            'client_id': os.getenv('STRAVA_CLIENT_ID', ''),
+            'secret': os.getenv('STRAVA_CLIENT_SECRET', ''),
+            'key': ''
+        },
+        'SCOPE': [
+            'read',
+            'profile:read_all',
+        ],
+    }
+}

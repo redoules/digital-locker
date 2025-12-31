@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static tailwind_tags %}
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -6,21 +7,10 @@
     <title>{% block title %}Work Clothes Tracker{% endblock %}</title>
     
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Flowbite CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css" rel="stylesheet" />
+    {% tailwind_css %}
     
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    
-    <!-- Custom styles -->
-    <style>
-        /* Custom Tailwind configuration */
-        @tailwind base;
-        @tailwind components;
-        @tailwind utilities;
-    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Navigation -->
